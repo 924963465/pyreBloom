@@ -21,6 +21,7 @@
  */
 
 #include "bloom.h"
+#include <ctype.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -79,8 +80,18 @@ int init_pyrebloom(
 
     // Now for the redis context
     struct timeval timeout = { 1, 500000 };
-    ctxt->ctxt = redisConnectWithTimeout(host, port, timeout);
-    if (ctxt->ctxt->err != 0) {
+
+    bool isunix = 0;
+    if (tolower(host[0]) == 'u') {
+      isunix = 1;
+    }
+    
+    if (isunix) {
+        ctxt->ctxt = redisConnectUnixWithTimeout(host, timeout);
+    } else {
+        ctxt->ctxt = redisConnectWithTimeout(host, port, timeout);
+    }
+    if (ctxt->ctxt == NULL || ctxt->ctxt->err != 0) {
         return PYREBLOOM_ERROR;
     }
 
