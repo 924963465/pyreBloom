@@ -81,11 +81,11 @@ int init_pyrebloom(
     // Now for the redis context
     struct timeval timeout = { 1, 500000 };
 
-    bool isunix = 0;
+    unsigned short isunix = 0;
     if (tolower(host[0]) == 'u') {
       isunix = 1;
     }
-    
+
     if (isunix) {
         ctxt->ctxt = redisConnectUnixWithTimeout(host, timeout);
     } else {
