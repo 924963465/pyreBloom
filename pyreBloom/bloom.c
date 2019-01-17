@@ -82,7 +82,8 @@ int init_pyrebloom(
     struct timeval timeout = { 1, 500000 };
 
     unsigned short isunix = 0;
-    if (tolower(host[0]) == 'u') {
+    char UNIX_SCHEME[] = "unix://";
+    if (strncmp(tolower(host[0]), UNIX_SCHEME, strlen(UNIX_SCHEME)) == 0) {
       isunix = 1;
     }
 
